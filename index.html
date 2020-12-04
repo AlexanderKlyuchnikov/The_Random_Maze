@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>The Random Maze</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <header>
+
+    </header>
+    <div id="main">
+        <div id="game_window">
+            <canvas id="canvas"></canvas>
+            <img id="finish_gif" src='img/finish.gif'>
+        </div> 
+        <div id="user_data">
+            <div id="width_height">
+                <p><b>Ширина:</b><br>
+                    <input id="user_width" type="text" value="41" size="20" class="input_size">
+                </p>
+                <p><b>Высота:</b><br>
+                    <input id="user_height" type="text" value="21" size="20" class="input_size">
+                </p>
+            </div>
+            <div id="choose_algorithm">
+                <select size="1" id="user_algorithm">
+                    <option selected>Алгоритм Прима</option>
+                    <option>Recursive Backtracker</option>
+                    <option>Hunt and Kill</option>
+                </select>
+            </div>
+            <input id="start_gen" type="button" value="Сгенерировать">
+        </div>
+    </div>
+    <script src="js/resize.js"></script>
+    <script src="js/start.js"></script>
+    <script id="maze_script"></script>
+
+</body>
+</html>

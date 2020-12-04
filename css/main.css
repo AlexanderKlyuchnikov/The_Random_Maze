@@ -1,0 +1,64 @@
+
+body {
+    background: url("../img/3.png");
+    background-color: rgb(208, 202, 172);
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    height: 100vh;
+    overflow: hidden;
+}
+header{
+    width: 75%;
+    height: 200px;
+}
+
+#main{
+    width: 960px;
+    height: 630px;
+    margin-top: 40px;
+}
+
+#canvas{
+    position: relative;
+    border: 3px solid rgb(99, 63, 0);
+    z-index: 1;
+}
+
+#game_window{
+    width: 100%;    
+    height: 75%;
+    z-index: 0;
+    position: relative;
+}
+#user_data{
+    width: 960px;
+    height: 150px;
+    padding-left: 220px;
+}
+#width_height{
+    float: left;
+    margin-left: 20px;
+}
+#choose_algorithm{
+    margin-top: 20px;
+    margin-left: 30px;
+    float: left;
+    border-radius: 5px;
+}
+#start_gen{
+    margin-top: 20px;
+    margin-left: 30px;
+    float: left;
+    height: 30px;
+}
+.input_size , #start_gen , #user_algorithm{
+    border: 2px solid rgb(99, 63, 0);
+    border-radius: 5px;
+}
+#finish_gif{
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+    visibility: hidden;
+}
