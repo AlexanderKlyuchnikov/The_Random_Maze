@@ -8,6 +8,8 @@ var VisCells = [];
     mazewidth = walllength * width - wallwidth * (width - 1);
     mazeheight = walllength * height - wallwidth * (height - 1);
     loffset = (windowwidth - mazewidth) / 2;
+    toffset = null;
+    
 Crafty.init(windowwidth, windowheight, document.getElementById("game_window"));
 var game_assets = {
             "sprites": {
@@ -40,16 +42,74 @@ Crafty.sprite(16, "img/sprite.png", {
   player: [0, 0],
 });
 
-Crafty.e("2D, Canvas, finish, Collision").attr({ x: -200, y: -200 })
-    .collision(6, 6, 32, 0, 32, 32, 0, 32)
-    .checkHits('player')
-    .bind('HitOn', function () {
-    //--------------------------------------------------------------------------finish
-    
-    //--------------------------------------------------------------------------finish
+//-------------------------------------------------------------------------------------------menu scene entities
+var user_width = Crafty.e("2D, HTML, Persist").append('<input id="user_width" type="number" min="5" max="25" value="25" class="input_size"></input>')
+    .attr({
+            x: (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3,
+            y: 150
+        });
+var user_height = Crafty.e("2D, HTML, Persist").append('<input id="user_height" type="number" min="5" max="12" value="12" class="input_size">')
+    .attr({
+        x: 2 * (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3 + document.getElementById("user_width").clientWidth,
+        y: 150
     });
+var user_alg = Crafty.e("2D, HTML, Persist").append(
+    '<div class="radio-container">'+
+        '<div class="form-item radio-btn nth-3">'+
+            '<input type="radio" name="alg_name" id="radio1">'+
+            '<label class="radio_input" for="radio1">Алгоритм Прима</label>'+
+        '</div>'+
+        '<div class="form-item radio-btn nth-3">'+
+            '<input type="radio" name="alg_name" id="radio2" checked>'+
+            '<label class="radio_input" for="radio2">Recursive Backtracker</label>'+
+        '</div>'+
+        '<div class="form-item radio-btn nth-3">'+
+            '<input type="radio" name="alg_name" id="radio3">'+
+            '<label class="radio_input" for="radio3">Hunt and Kill</label>'+
+        '</div>'+
+    '</div>')
+    .attr({ x: (windowwidth - 700) / 2, y: 300, w: 700, h: 100 });
+var start_gen = Crafty.e("2D, HTML, Persist")
+    .append('<input id="start_gen" type="button" class="buttons" value="СГЕНЕРИРОВАТЬ">')
+    .attr({ x: (windowwidth - 200) / 2, y: 380 });    
+
+document.getElementById("start_gen").onclick = function () {
+    width = Number.parseInt(document.getElementById("user_width").value);
+    height = Number.parseInt(document.getElementById("user_height").value);
+    mazewidth = walllength * width - wallwidth * (width - 1);
+    mazeheight = walllength * height - wallwidth * (height - 1);
+    loffset = (windowwidth - mazewidth) / 2;
+    Crafty.enterScene("game");
+
+    var algorithm = document.getElementsByName("alg_name");
+    if (algorithm[0].checked) {
+      Prims_algorithm();
+    }
+    if (algorithm[1].checked) {
+      recursive_backtracker();
+    }
+    if (algorithm[2].checked) {
+      hunt_and_kill();
+    }
+}      
+//-------------------------------------------------------------------------------------------menu scene entities
+
+
+
+//-------------------------------------------------------------------------------------------game scene entities
+var rebuild_game_scene = Crafty.e("2D, HTML, Persist")
+    .append('<input id="rebuild_game_scene" type="button"  class="buttons" value="ПЕРЕСТРОИТЬ">')
+    .attr({ x: (windowwidth - 200) / 2, y: 0 });
+var finish = Crafty.e("2D, Canvas, finish, Collision, Persist").attr({ x: -200, y: -200 })
+        .collision(6, 6, 32, 0, 32, 32, 0, 32)
+        .checkHits('player')
+        .bind('HitOn', function () {
+        //--------------------------------------------------------------------------finish
+            Crafty.enterScene("finish");
+        //--------------------------------------------------------------------------finish
+        });
 var lastOKPosition = { x: 0, y: 0 };
-var player = Crafty.e("2D, Canvas, Collision, Fourway, player, SpriteAnimation")
+var player = Crafty.e("2D, Canvas, Collision, Fourway, player, SpriteAnimation, Persist")
     .attr({x:-100, y: -100})
     .fourway(100)
     .reel("walk_left", 600, 6, 0, 3)
@@ -91,29 +151,127 @@ var player = Crafty.e("2D, Canvas, Collision, Fourway, player, SpriteAnimation")
                 this.pauseAnimation();
             }
     });
-function MakeCells() {
+toffset = document.getElementById("rebuild_game_scene").clientHeight;
+document.getElementById("rebuild_game_scene").onclick = function () {
+    Crafty.enterScene('menu');
+}
+//-------------------------------------------------------------------------------------------game scene entities
+
+
+
+//-------------------------------------------------------------------------------------------finish scene entities
+
+//-------------------------------------------------------------------------------------------finish scene entities
+
+
+
+//-------------------------------------------------------------------------------------------menu scene
+Crafty.defineScene('menu', function () {
+    player.visible = false;
+    finish.visible = false;
+
+    rebuild_game_scene.visible = false;
+
+    user_alg.visible = true;
+    user_height.visible = true;
+    user_width.visible = true;
+    start_gen.visible = true;
+
+    Crafty.e("2D, DOM, Text")
+        .attr({ x: (windowwidth - 300) / 2, y: 50, w: 300, h: 40 })
+        .text("РАЗМЕРЫ ЛАБИРИНТА")
+        .textAlign("center")
+        .textFont({ size: '22px', weight: 'bold', family: 'Arial'})
+        .textColor("rgb(74, 51, 10)");
+    Crafty.e("2D, DOM, Text")
+        .attr({
+            x: (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3,
+            y: 120, w: 110, h: 40
+        })
+        .text("ШИРИНА")
+        .textAlign("center")
+        .textFont({ size: '18px', weight: 'bold', family: 'Arial'})
+        .textColor("rgb(74, 51, 10)");
+    Crafty.e("2D, DOM, Text")
+        .attr({
+            x: 2 * (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3 + document.getElementById("user_width").clientWidth,
+            y: 120, w: 110, h: 40
+        })
+        .text("ВЫСОТА")
+        .textAlign("center")
+        .textFont({ size: '18px', weight: 'bold', family: 'Arial'})
+        .textColor("rgb(74, 51, 10)");
+    Crafty.e("2D, DOM, Text")
+        .attr({ x: (windowwidth - 300) / 2, y: 220, w: 300, h: 40 })
+        .text("АЛГОРИТМ ПОСТРОЕНИЯ")
+        .textAlign("center")
+        .textFont({ size: '22px', weight: 'bold', family: 'Arial'})
+        .textColor("rgb(74, 51, 10)");
+    var elems = document.getElementsByClassName("radio_input");
+    for (var i = 0; i < elems.length; ++i){
+        elems[i].onclick = function(event) {
+            event.stopPropagation();
+        }; 
+    }
+})
+Crafty.enterScene('menu');
+//-------------------------------------------------------------------------------------------menu scene
+
+
+
+//-------------------------------------------------------------------------------------------game scene
+Crafty.defineScene('game', function () {
+    user_alg.visible = false;
+    user_height.visible = false;
+    user_width.visible = false;
+    start_gen.visible = false;
+
+    rebuild_game_scene.visible = true;
+    player.visible = true;
+    finish.visible = true;
+    player.attr({ x: loffset + wallwidth, y: wallwidth + toffset, z: 1 });
+    finish.attr({
+      x: loffset + walllength * (width - 1) - (width - 1) * wallwidth + 6,
+      y: walllength * (height - 1) - (height - 1) * wallwidth + 6 + toffset,
+    });
+    
     for (var i = 0; i <= height; ++i) {
         if (i < height)
             VisCells[i] = [];
         for (var j = 0; j <= width; ++j) {
             if (i != height)
                 Crafty.e("2D, Canvas, Collision, wall, lwall, lwall" + i + '_' + j)
-                    .attr({ x: loffset + walllength * j - j * wallwidth, y: walllength * i - i * wallwidth, z: 2, w: 4 })
+                    .attr({ x: loffset + walllength * j - j * wallwidth, y: walllength * i - i * wallwidth + toffset, z: 2, w: 4 })
             if (j != width)
                 Crafty.e("2D, Canvas, Collision, wall, twall, twall" + i + '_' + j)
-                    .attr({ x: loffset + walllength * j - j * wallwidth, y: walllength * i - i * wallwidth, z: 2, h: 4 })
+                    .attr({ x: loffset + walllength * j - j * wallwidth, y: walllength * i - i * wallwidth + toffset, z: 2, h: 4 })
             if (j < width && i < height)
                 VisCells[i].push(false);
         }
     }
-}
-    
-
-player.attr({ x: loffset + wallwidth + 2, y: wallwidth + 2, z: 1 });
-Crafty("finish").attr({x: loffset + walllength * (width - 1) - (width - 1) * wallwidth + 6, y: walllength * (height - 1) - (height - 1) * wallwidth + 6});
+})
+//-------------------------------------------------------------------------------------------game scene
 
 
 
+//-------------------------------------------------------------------------------------------finish scene
+Crafty.defineScene('finish', function () {
+    user_alg.visible = false;
+    user_height.visible = false;
+    user_width.visible = false;
+    start_gen.visible = false;
+    rebuild_game_scene.visible = false;
+    player.visible = false;
+    finish.visible = false;
+    Crafty.e("2D, DOM, Text")
+        .attr({ x: 200, y: 200, w: 750, h: 200 })
+        .text("ЗДЕСЬ НУЖНО ЧТО-ТО НА ТЕМУ ПОБЕДЫ")
+        .textAlign("center")
+        .textFont({ size: '18px', weight: 'bold', family: 'Arial'})
+        .textColor("rgb(74, 51, 10)");
+})
+
+//-------------------------------------------------------------------------------------------finish scene
 
 function BreakWall(firstP, secondP) {
     if (firstP[0] == secondP[0] + 1)

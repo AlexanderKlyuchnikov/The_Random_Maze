@@ -4,8 +4,8 @@
     align-items: center;
     justify-content: flex-start;
     flex-wrap: wrap;
-    font-family: sans-serif;
-    border: 2px solid rgb(99, 63, 0);
+    font-family: Arial, Helvetica, sans-serif;
+    border: 2px solid rgb(74, 51, 10);
     border-radius: 6px;
 }
 .radio-container *{
@@ -15,7 +15,7 @@
     -ms-user-select: none;
 }
 .radio-container .radio-btn{
-    border-right: 2px solid rgb(99, 63, 0);
+    border-right: 2px solid rgb(74, 51, 10);
     overflow: hidden;
 }
 .radio-container .radio-btn:last-child{
@@ -26,14 +26,19 @@
 
 .radio-container .radio-btn label{
     background-color: transparent;
-    color: rgb(99, 63, 0);
+    color: rgb(74, 51, 10);
     display: block;
     padding: 6px 12px;
     text-align: center;
     font-weight: bold;
 }
-.radio-container .radio-btn input{display: none;}
+.radio-container .radio-btn input{
+    display: none;
+}
 .radio-container .radio-btn input:checked + label{
-    background-color: rgb(99, 63, 0);
+    background-color: rgb(74, 51, 10);
     color: #ede3d8;
+}
+.radio-container .radio-btn label:hover{
+    cursor: pointer;
 }

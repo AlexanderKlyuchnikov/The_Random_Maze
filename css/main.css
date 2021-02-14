@@ -40,27 +40,53 @@ header{
     float: left;
     margin-left: 20px;
 }
-#choose_algorithm{
+/* #choose_algorithm{
     margin-top: 20px;
     margin-left: 30px;
     float: left;
     border-radius: 5px;
-}
-#start_gen{
-    margin-top: 20px;
-    margin-left: 30px;
-    float: left;
-    height: 30px;
-}
-.input_size , #start_gen , #user_algorithm{
-    border: 2px solid rgb(99, 63, 0);
+} */
+.input_size , .buttons{
+    border: 2px solid rgb(74, 51, 10);
     border-radius: 6px;
     outline: none;
+    width: 100px;
     text-align: center;
+    background-color: transparent;
+    font-weight: bold;
+    color: rgb(74, 51, 10);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+}
+#start_gen{
+    height: 30px;
+    width: 200px;
+}
+#rebuild_game_scene{
+    height: 30px;
+    width: 200px;
+    border-radius: 6px 6px 0 0;
+}
+.buttons:hover{
+    background-color: rgb(74, 51, 10);
+    color: #ede3d8;
+    cursor: pointer;
 }
 #finish_gif{
     position: absolute;
     z-index: 2;
     pointer-events: none;
     visibility: hidden;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+input[type="number"]:hover,
+input[type="number"]:focus {
+  -moz-appearance: number-input;
 }
