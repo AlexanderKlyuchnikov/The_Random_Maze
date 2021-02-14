@@ -54,7 +54,9 @@ header{
 }
 .input_size , #start_gen , #user_algorithm{
     border: 2px solid rgb(99, 63, 0);
-    border-radius: 5px;
+    border-radius: 6px;
+    outline: none;
+    text-align: center;
 }
 #finish_gif{
     position: absolute;

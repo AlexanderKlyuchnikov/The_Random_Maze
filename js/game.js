@@ -1,6 +1,6 @@
 var VisCells = [];
     walllength = 40;
-    wallwidth = 6;
+    wallwidth = 4;
     height = 13;
     width = 25;
     windowwidth = document.getElementById("game_window").clientWidth;
@@ -24,32 +24,33 @@ var game_assets = {
                     map: {
                         lwall: [0, 0]
                     }
+                },
+                "img/finish.png": {
+                    tile: 32,
+                    tileh: 32,
+                    map: {
+                        finish: [0, 0]
+                    }
                 }
             }
         };
 Crafty.load(game_assets);
-for (var i = 0; i <= height; ++i) {
-    if (i < height)
-        VisCells[i] = [];
-    for (var j = 0; j <= width; ++j) {
-        if (i != height)
-        var al = Crafty.e("2D, Canvas, Collision, wall, lwall, lwall" + i + '_' + j)
-            .attr({ x: loffset + walllength * j - j * wallwidth, y: walllength * i - i * wallwidth, z:2})
-        if (j != width)
-        var at = Crafty.e("2D, Canvas, Collision, wall, twall, twall" + i + '_' + j)
-            .attr({ x: loffset + walllength * j - j * wallwidth, y: walllength * i - i * wallwidth, z:2})
-        if (j < width && i < height)
-            VisCells[i].push(false);
-    }
-}
 
 Crafty.sprite(16, "img/sprite.png", {
   player: [0, 0],
 });
 
+Crafty.e("2D, Canvas, finish, Collision").attr({ x: -200, y: -200 })
+    .collision(6, 6, 32, 0, 32, 32, 0, 32)
+    .checkHits('player')
+    .bind('HitOn', function () {
+    //--------------------------------------------------------------------------finish
+    
+    //--------------------------------------------------------------------------finish
+    });
 var lastOKPosition = { x: 0, y: 0 };
 var player = Crafty.e("2D, Canvas, Collision, Fourway, player, SpriteAnimation")
-    .attr({ x: loffset + wallwidth + 2, y: wallwidth + 2, z:1})
+    .attr({x:-100, y: -100})
     .fourway(100)
     .reel("walk_left", 600, 6, 0, 3)
     .reel("walk_right", 600, 9, 0, 3)
@@ -90,26 +91,30 @@ var player = Crafty.e("2D, Canvas, Collision, Fourway, player, SpriteAnimation")
                 this.pauseAnimation();
             }
     });
-var currPos = [Crafty.math.randomInt(0, height - 1), Crafty.math.randomInt(0, width - 1)];
-    way = [];
-    UnVisNeigh = [];
-way.push(currPos);
-while (way.length > 0) {
-    UnVisNeigh = [];
-    VisCells[currPos[0]][currPos[1]] = true;
-    FindUnVisNeigh(currPos[0], currPos[1]);
-    if (UnVisNeigh.length > 0)
-    {
-        var chosen = UnVisNeigh[Crafty.math.randomInt(0, UnVisNeigh.length - 1)];
-        BreakWall(currPos, chosen);
-        way.push(chosen);
-        currPos = chosen;
-    }
-    else
-    {
-        currPos = way.pop();
+function MakeCells() {
+    for (var i = 0; i <= height; ++i) {
+        if (i < height)
+            VisCells[i] = [];
+        for (var j = 0; j <= width; ++j) {
+            if (i != height)
+                Crafty.e("2D, Canvas, Collision, wall, lwall, lwall" + i + '_' + j)
+                    .attr({ x: loffset + walllength * j - j * wallwidth, y: walllength * i - i * wallwidth, z: 2, w: 4 })
+            if (j != width)
+                Crafty.e("2D, Canvas, Collision, wall, twall, twall" + i + '_' + j)
+                    .attr({ x: loffset + walllength * j - j * wallwidth, y: walllength * i - i * wallwidth, z: 2, h: 4 })
+            if (j < width && i < height)
+                VisCells[i].push(false);
+        }
     }
 }
+    
+
+player.attr({ x: loffset + wallwidth + 2, y: wallwidth + 2, z: 1 });
+Crafty("finish").attr({x: loffset + walllength * (width - 1) - (width - 1) * wallwidth + 6, y: walllength * (height - 1) - (height - 1) * wallwidth + 6});
+
+
+
+
 function BreakWall(firstP, secondP) {
     if (firstP[0] == secondP[0] + 1)
     {
@@ -142,60 +147,40 @@ function FindUnVisNeigh(y, x) {
 function inside(y, x) {
     return y < height && y >= 0 && x < width && x >= 0 ? true : false;
 }
-/*var canvas = document.getElementById("canvas"),
-    ctx = canvas.getContext("2d");
-    wallcolor = "rgb(178,113,2)";
-    passcolor = "rgb(219,199,180)";
-    playercolor = "red";
-    finishcolor = "blue";
-    k = 10;
-    maze = [];
-    currPos = [0,0];
-    
-function inside(y, x) {
-    return y < height && y >= 0 && x < width && x >= 0 ? true : false;
-}
-
-function makePass(y, x) {
-    maze[y][x] = "pass";
-    ctx.fillStyle = passcolor;
-    ctx.fillRect(x * k, y * k, k, k);
-}
 
 
+// function gif_size() {
+//     var finish_gif = document.getElementById("finish_gif");
+//     finish_gif.style.height = "";
+//     finish_gif.style.width = "";
+//     finish_gif.style.visibility = "hidden";
+//     if (width < height) finish_gif.style.width = width * k + "px";
+//     else finish_gif.style.height = height * k + "px";
+//     finish_gif.style.left =
+//     canvas.offsetLeft + (canvas.width - finish_gif.width) / 2 + "px";
+//     finish_gif.style.top =
+//     canvas.offsetTop + (canvas.height - finish_gif.height) / 2 + "px";
 
-function gif_size() {
-    var finish_gif = document.getElementById("finish_gif");
-    finish_gif.style.height = "";
-    finish_gif.style.width = "";
-    finish_gif.style.visibility = "hidden";
-    if (width < height) finish_gif.style.width = width * k + "px";
-    else finish_gif.style.height = height * k + "px";
-    finish_gif.style.left =
-    canvas.offsetLeft + (canvas.width - finish_gif.width) / 2 + "px";
-    finish_gif.style.top =
-    canvas.offsetTop + (canvas.height - finish_gif.height) / 2 + "px";
-
-}
+// }
 
 
-function game(e) {
-    var nextPos = currPos;
-    if (e.code == "ArrowLeft") nextPos = [currPos[0], currPos[1] - 1];
-    if (e.code == "ArrowUp") nextPos = [currPos[0] - 1, currPos[1]];
-    if (e.code == "ArrowRight") nextPos = [currPos[0], currPos[1] + 1];
-    if (e.code == "ArrowDown") nextPos = [currPos[0] + 1, currPos[1]];
-    if (inside(nextPos[0], nextPos[1]) && maze[nextPos[0]][nextPos[1]] != "wall") {
-        ctx.fillStyle = passcolor;
-        ctx.fillRect(currPos[1] * k, currPos[0] * k, k, k);
-        currPos = nextPos;
-        ctx.fillStyle = playercolor;
-        ctx.fillRect(currPos[1] * k, currPos[0] * k, k, k);
-    }
-    if (nextPos[0] == height - 1 && nextPos[1] == width - 1) {
-        ctx.fillStyle = "rgba(0,0,0,0.7)";
-        ctx.fillRect(0, 0, width * k, height * k);
-        finish_gif.style.visibility = "visible";
-        document.body.onkeydown = null;
-    }
-};*/
+// function game(e) {
+//     var nextPos = currPos;
+//     if (e.code == "ArrowLeft") nextPos = [currPos[0], currPos[1] - 1];
+//     if (e.code == "ArrowUp") nextPos = [currPos[0] - 1, currPos[1]];
+//     if (e.code == "ArrowRight") nextPos = [currPos[0], currPos[1] + 1];
+//     if (e.code == "ArrowDown") nextPos = [currPos[0] + 1, currPos[1]];
+//     if (inside(nextPos[0], nextPos[1]) && maze[nextPos[0]][nextPos[1]] != "wall") {
+//         ctx.fillStyle = passcolor;
+//         ctx.fillRect(currPos[1] * k, currPos[0] * k, k, k);
+//         currPos = nextPos;
+//         ctx.fillStyle = playercolor;
+//         ctx.fillRect(currPos[1] * k, currPos[0] * k, k, k);
+//     }
+//     if (nextPos[0] == height - 1 && nextPos[1] == width - 1) {
+//         ctx.fillStyle = "rgba(0,0,0,0.7)";
+//         ctx.fillRect(0, 0, width * k, height * k);
+//         finish_gif.style.visibility = "visible";
+//         document.body.onkeydown = null;
+//     }
+// }

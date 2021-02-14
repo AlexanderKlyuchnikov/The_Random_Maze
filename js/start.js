@@ -1,5 +1,12 @@
 !(function () {
-    document.getElementById("start_gen").onclick = function() { 
+    document.getElementById("start_gen").onclick = function () { 
+        width = Number.parseInt(document.getElementById("user_width").value);
+        height = Number.parseInt(document.getElementById("user_height").value);
+        mazewidth = walllength * width - wallwidth * (width - 1);
+        mazeheight = walllength * height - wallwidth * (height - 1);
+        loffset = (windowwidth - mazewidth) / 2;
+        Crafty("wall").destroy();
+        MakeCells();
         document.getElementById("maze_script").parentElement.removeChild(document.getElementById("maze_script"));
 
         if (parseInt(document.getElementById("user_width").value) > 95) document.getElementById("user_width").value = "95";
