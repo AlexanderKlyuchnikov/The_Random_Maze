@@ -48,7 +48,7 @@ var user_width = Crafty.e("2D, HTML, Persist").append('<input id="user_width" ty
             x: (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3,
             y: 150
         });
-var user_height = Crafty.e("2D, HTML, Persist").append('<input id="user_height" type="number" min="5" max="12" value="12" class="input_size">')
+var user_height = Crafty.e("2D, HTML, Persist").append('<input id="user_height" type="number" min="5" max="17" value="17" class="input_size">')
     .attr({
         x: 2 * (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3 + document.getElementById("user_width").clientWidth,
         y: 150
@@ -99,7 +99,7 @@ document.getElementById("start_gen").onclick = function () {
 //-------------------------------------------------------------------------------------------game scene entities
 var rebuild_game_scene = Crafty.e("2D, HTML, Persist")
     .append('<input id="rebuild_game_scene" type="button"  class="buttons" value="ПЕРЕСТРОИТЬ">')
-    .attr({ x: (windowwidth - 200) / 2, y: 0 });
+    .attr({ x: (windowwidth - 150) / 2, y: 0 });
 var finish = Crafty.e("2D, Canvas, finish, Collision, Persist").attr({ x: -200, y: -200 })
         .collision(6, 6, 32, 0, 32, 32, 0, 32)
         .checkHits('player')
@@ -160,7 +160,12 @@ document.getElementById("rebuild_game_scene").onclick = function () {
 
 
 //-------------------------------------------------------------------------------------------finish scene entities
-
+var rebuild_on_finish = Crafty.e("2D, HTML, Persist")
+    .append('<div id="rebuild_on_finish"></div>')
+    .attr({ x: (windowwidth - 50) / 2, y: 400 });
+document.getElementById("rebuild_on_finish").onclick = function () {
+    Crafty.enterScene("menu");
+}
 //-------------------------------------------------------------------------------------------finish scene entities
 
 
@@ -169,8 +174,8 @@ document.getElementById("rebuild_game_scene").onclick = function () {
 Crafty.defineScene('menu', function () {
     player.visible = false;
     finish.visible = false;
-
     rebuild_game_scene.visible = false;
+    rebuild_on_finish.visible = false;
 
     user_alg.visible = true;
     user_height.visible = true;
@@ -182,7 +187,8 @@ Crafty.defineScene('menu', function () {
         .text("РАЗМЕРЫ ЛАБИРИНТА")
         .textAlign("center")
         .textFont({ size: '22px', weight: 'bold', family: 'Arial'})
-        .textColor("rgb(74, 51, 10)");
+        .textColor("rgb(74, 51, 10)")
+        .css({'cursor':'default'});
     Crafty.e("2D, DOM, Text")
         .attr({
             x: (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3,
@@ -191,7 +197,8 @@ Crafty.defineScene('menu', function () {
         .text("ШИРИНА")
         .textAlign("center")
         .textFont({ size: '18px', weight: 'bold', family: 'Arial'})
-        .textColor("rgb(74, 51, 10)");
+        .textColor("rgb(74, 51, 10)")
+        .css({'cursor':'default'});
     Crafty.e("2D, DOM, Text")
         .attr({
             x: 2 * (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3 + document.getElementById("user_width").clientWidth,
@@ -200,13 +207,16 @@ Crafty.defineScene('menu', function () {
         .text("ВЫСОТА")
         .textAlign("center")
         .textFont({ size: '18px', weight: 'bold', family: 'Arial'})
-        .textColor("rgb(74, 51, 10)");
+        .textColor("rgb(74, 51, 10)")
+        .css({'cursor':'default'});
     Crafty.e("2D, DOM, Text")
         .attr({ x: (windowwidth - 300) / 2, y: 220, w: 300, h: 40 })
         .text("АЛГОРИТМ ПОСТРОЕНИЯ")
         .textAlign("center")
         .textFont({ size: '22px', weight: 'bold', family: 'Arial'})
-        .textColor("rgb(74, 51, 10)");
+        .textColor("rgb(74, 51, 10)")
+        .css({ 'cursor': 'default' });
+    
     var elems = document.getElementsByClassName("radio_input");
     for (var i = 0; i < elems.length; ++i){
         elems[i].onclick = function(event) {
@@ -225,6 +235,7 @@ Crafty.defineScene('game', function () {
     user_height.visible = false;
     user_width.visible = false;
     start_gen.visible = false;
+    rebuild_on_finish.visible = false;
 
     rebuild_game_scene.visible = true;
     player.visible = true;
@@ -263,9 +274,11 @@ Crafty.defineScene('finish', function () {
     rebuild_game_scene.visible = false;
     player.visible = false;
     finish.visible = false;
+
+    rebuild_on_finish.visible = true;
     Crafty.e("2D, DOM, Text")
         .attr({ x: 200, y: 200, w: 750, h: 200 })
-        .text("ЗДЕСЬ НУЖНО ЧТО-ТО НА ТЕМУ ПОБЕДЫ")
+        .text("ЗДЕСЬ НУЖНО ЧТО-ТО КРАСИВОЕ ПРИДУМАТЬ")
         .textAlign("center")
         .textFont({ size: '18px', weight: 'bold', family: 'Arial'})
         .textColor("rgb(74, 51, 10)");
@@ -305,40 +318,3 @@ function FindUnVisNeigh(y, x) {
 function inside(y, x) {
     return y < height && y >= 0 && x < width && x >= 0 ? true : false;
 }
-
-
-// function gif_size() {
-//     var finish_gif = document.getElementById("finish_gif");
-//     finish_gif.style.height = "";
-//     finish_gif.style.width = "";
-//     finish_gif.style.visibility = "hidden";
-//     if (width < height) finish_gif.style.width = width * k + "px";
-//     else finish_gif.style.height = height * k + "px";
-//     finish_gif.style.left =
-//     canvas.offsetLeft + (canvas.width - finish_gif.width) / 2 + "px";
-//     finish_gif.style.top =
-//     canvas.offsetTop + (canvas.height - finish_gif.height) / 2 + "px";
-
-// }
-
-
-// function game(e) {
-//     var nextPos = currPos;
-//     if (e.code == "ArrowLeft") nextPos = [currPos[0], currPos[1] - 1];
-//     if (e.code == "ArrowUp") nextPos = [currPos[0] - 1, currPos[1]];
-//     if (e.code == "ArrowRight") nextPos = [currPos[0], currPos[1] + 1];
-//     if (e.code == "ArrowDown") nextPos = [currPos[0] + 1, currPos[1]];
-//     if (inside(nextPos[0], nextPos[1]) && maze[nextPos[0]][nextPos[1]] != "wall") {
-//         ctx.fillStyle = passcolor;
-//         ctx.fillRect(currPos[1] * k, currPos[0] * k, k, k);
-//         currPos = nextPos;
-//         ctx.fillStyle = playercolor;
-//         ctx.fillRect(currPos[1] * k, currPos[0] * k, k, k);
-//     }
-//     if (nextPos[0] == height - 1 && nextPos[1] == width - 1) {
-//         ctx.fillStyle = "rgba(0,0,0,0.7)";
-//         ctx.fillRect(0, 0, width * k, height * k);
-//         finish_gif.style.visibility = "visible";
-//         document.body.onkeydown = null;
-//     }
-// }

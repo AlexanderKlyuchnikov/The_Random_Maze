@@ -15,19 +15,12 @@ header{
 
 #main{
     width: 960px;
-    height: 630px;
-    margin-top: 40px;
-}
-
-#canvas{
-    position: relative;
-    border: 3px solid rgb(99, 63, 0);
-    z-index: 1;
+    height: 680px;
 }
 
 #game_window{
     width: 100%;    
-    height: 75%;
+    height: 100%;
     z-index: 0;
     position: relative;
 }
@@ -40,12 +33,6 @@ header{
     float: left;
     margin-left: 20px;
 }
-/* #choose_algorithm{
-    margin-top: 20px;
-    margin-left: 30px;
-    float: left;
-    border-radius: 5px;
-} */
 .input_size , .buttons{
     border: 2px solid rgb(74, 51, 10);
     border-radius: 6px;
@@ -64,7 +51,7 @@ header{
 }
 #rebuild_game_scene{
     height: 30px;
-    width: 200px;
+    width: 150px;
     border-radius: 6px 6px 0 0;
 }
 .buttons:hover{
@@ -72,11 +59,26 @@ header{
     color: #ede3d8;
     cursor: pointer;
 }
-#finish_gif{
-    position: absolute;
-    z-index: 2;
-    pointer-events: none;
-    visibility: hidden;
+#rebuild_on_finish{
+    background-image: url("../img/restart.png");
+    height: 50px;
+    width: 50px;
+    background-size: contain;
+}
+#rebuild_on_finish:hover{
+    animation: rotate 1s linear infinite;
+    cursor: pointer;
+}
+@keyframes rotate{
+    0%{
+        transform: rotate(0deg);
+    }
+    50%{
+        transform: rotate(-100deg);
+    }
+    100%{
+        transform: rotate(-360deg);
+    }
 }
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
@@ -90,3 +92,9 @@ input[type="number"]:hover,
 input[type="number"]:focus {
   -moz-appearance: number-input;
 }
+/* #finish_gif{
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+    visibility: hidden;
+} */
