@@ -1,7 +1,7 @@
 var VisCells = [];
     walllength = 40;
     wallwidth = 4;
-    height = 13;
+    height = 17;
     width = 25;
     windowwidth = document.getElementById("game_window").clientWidth;
     windowheight = document.getElementById("game_window").clientHeight;
@@ -38,9 +38,10 @@ var game_assets = {
         };
 Crafty.load(game_assets);
 
-Crafty.sprite(16, "img/sprite.png", {
+Crafty.sprite(32, "img/sprite.png", {
   player: [0, 0],
 });
+
 
 //-------------------------------------------------------------------------------------------menu scene entities
 var user_width = Crafty.e("2D, HTML, Persist").append('<input id="user_width" type="number" min="5" max="25" value="25" class="input_size"></input>')
@@ -112,11 +113,15 @@ var lastOKPosition = { x: 0, y: 0 };
 var player = Crafty.e("2D, Canvas, Collision, Fourway, player, SpriteAnimation, Persist")
     .attr({x:-100, y: -100})
     .fourway(100)
-    .reel("walk_left", 600, 6, 0, 3)
-    .reel("walk_right", 600, 9, 0, 3)
-    .reel("walk_up", 600, 3, 0, 3)
-    .reel("walk_down", 600, 0, 0, 3)
-    .collision(2, 1, 14, 1, 14, 16, 2, 16)
+    .reel("down", 500, 0, 0, 4)
+    .reel("left_down", 500, 0, 1, 4)
+    .reel("right_down", 500, 0, 2, 4)
+    .reel("left", 500, 0, 3, 4)
+    .reel("right", 500, 0, 4, 4)
+    .reel("up", 500, 0, 5, 4)
+    .reel("left_up", 500, 0, 6, 4)
+    .reel("right_up", 500, 0, 7, 4)
+    .collision(10, 8, 22, 8, 22, 24, 10, 24)
     .bind('Move', function() {
         
         if (this.hit("wall"))
@@ -130,26 +135,19 @@ var player = Crafty.e("2D, Canvas, Collision, Fourway, player, SpriteAnimation, 
             lastOKPosition.y = this.y;
         }
     })
-    .bind("NewDirection", function (direction) {
-            if (direction.x < 0) {
-                if (!this.isPlaying("walk_left"))
-                    this.animate("walk_left", -1);
-            }
-            if (direction.x > 0) {
-                if (!this.isPlaying("walk_right"))
-                    this.animate("walk_right", -1);
-            }
-            if (direction.y < 0) {
-                if (!this.isPlaying("walk_up"))
-                    this.animate("walk_up", -1);
-            }
-            if (direction.y > 0) {
-                if (!this.isPlaying("walk_down"))
-                    this.animate("walk_down", -1);
-            }
-            if(!direction.x && !direction.y) {
-                this.pauseAnimation();
-            }
+    .bind("NewDirection", function (e) {
+        if (this.isPlaying()) {
+          this.pauseAnimation();
+          this.resetAnimation();
+        }
+        if (e.x == 0 && e.y == 1) this.animate("down", -1);
+        if (e.x == 0 && e.y == -1) this.animate("up", -1);
+        if (e.x == 1 && e.y == 1) this.animate("right_down", -1);
+        if (e.x == 1 && e.y == -1) this.animate("right_up", -1);
+        if (e.x == -1 && e.y == 1) this.animate("left_down", -1);
+        if (e.x == -1 && e.y == -1) this.animate("left_up", -1);
+        if (e.x == 1 && e.y == 0) this.animate("right", -1);
+        if (e.x == -1 && e.y == 0) this.animate("left", -1);
     });
 toffset = document.getElementById("rebuild_game_scene").clientHeight;
 document.getElementById("rebuild_game_scene").onclick = function () {
@@ -224,7 +222,7 @@ Crafty.defineScene('menu', function () {
         }; 
     }
 })
-Crafty.enterScene('menu');
+Crafty.enterScene("menu");
 //-------------------------------------------------------------------------------------------menu scene
 
 
@@ -240,7 +238,7 @@ Crafty.defineScene('game', function () {
     rebuild_game_scene.visible = true;
     player.visible = true;
     finish.visible = true;
-    player.attr({ x: loffset + wallwidth, y: wallwidth + toffset, z: 1 });
+    player.attr({ x: loffset + wallwidth, y: wallwidth + toffset, z: 1 }).animate("down", 1).pauseAnimation();
     finish.attr({
       x: loffset + walllength * (width - 1) - (width - 1) * wallwidth + 6,
       y: walllength * (height - 1) - (height - 1) * wallwidth + 6 + toffset,
