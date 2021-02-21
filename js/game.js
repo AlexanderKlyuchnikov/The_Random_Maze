@@ -75,8 +75,8 @@ var start_gen = Crafty.e("2D, HTML, Persist")
     .attr({ x: (windowwidth - 200) / 2, y: 380 });    
 
 document.getElementById("start_gen").onclick = function () {
-    width = Number.parseInt(document.getElementById("user_width").value);
-    height = Number.parseInt(document.getElementById("user_height").value);
+    width = Number.parseInt(document.getElementById("user_width").value, 10);
+    height = Number.parseInt(document.getElementById("user_height").value, 10);
     mazewidth = walllength * width - wallwidth * (width - 1);
     mazeheight = walllength * height - wallwidth * (height - 1);
     loffset = (windowwidth - mazewidth) / 2;
@@ -285,22 +285,18 @@ Crafty.defineScene('finish', function () {
 //-------------------------------------------------------------------------------------------finish scene
 
 function BreakWall(firstP, secondP) {
-    if (firstP[0] == secondP[0] + 1)
-    {
-        Crafty("twall" + firstP[0] + "_" + firstP[1]).destroy();
-    }
-    if (firstP[0] == secondP[0] - 1)
-    {
-        Crafty("twall" + secondP[0] + "_" + secondP[1]).destroy();
-    } 
-    if (firstP[1] == secondP[1] + 1)
-    {
-        Crafty("lwall" + firstP[0] + "_" + firstP[1]).destroy();
-    }
-    if (firstP[1] == secondP[1] - 1)
-    {
-        Crafty("lwall" + secondP[0] + "_" + secondP[1]).destroy();
-    }  
+        if (firstP[0] == secondP[0] + 1) {
+            Crafty("twall" + firstP[0] + "_" + firstP[1]).destroy();
+        }
+        if (firstP[0] == secondP[0] - 1) {
+            Crafty("twall" + secondP[0] + "_" + secondP[1]).destroy();
+        }
+        if (firstP[1] == secondP[1] + 1) {
+            Crafty("lwall" + firstP[0] + "_" + firstP[1]).destroy();
+        }
+        if (firstP[1] == secondP[1] - 1) {
+            Crafty("lwall" + secondP[0] + "_" + secondP[1]).destroy();
+        }
 }
 function FindUnVisNeigh(y, x) {
         if (inside(y + 1, x) && VisCells[y + 1][x] == false)
