@@ -1,7 +1,7 @@
 function Prims_algorithm(){
     var currPos = [Crafty.math.randomInt(0, height - 1), Crafty.math.randomInt(0, width - 1)];
         WallsInProcess = [];
-    function FindNeighWalls(y, x) {
+    function FindNeighWallsPrims(y, x) {
         if (inside(y + 1, x) && VisCells[y + 1][x] == false) {
             WallsInProcess.push([[y, x], [y + 1, x]]);
         }
@@ -16,7 +16,7 @@ function Prims_algorithm(){
         }
     }
 
-    FindNeighWalls(currPos[0], currPos[1]);
+    FindNeighWallsPrims(currPos[0], currPos[1]);
     //-------------------------------------------------------------------------------------------------------
     build_Prims();
     function build_Prims()
@@ -26,7 +26,7 @@ function Prims_algorithm(){
         if (VisCells[WallsInProcess[randomInd][1][0]][WallsInProcess[randomInd][1][1]] == false)
         {
             BreakWall(WallsInProcess[randomInd][0], WallsInProcess[randomInd][1]);
-            FindNeighWalls(WallsInProcess[randomInd][1][0], WallsInProcess[randomInd][1][1]);
+            FindNeighWallsPrims(WallsInProcess[randomInd][1][0], WallsInProcess[randomInd][1][1]);
             VisCells[WallsInProcess[randomInd][1][0]][WallsInProcess[randomInd][1][1]] = true;
         }
         WallsInProcess.splice(randomInd, 1);
@@ -46,7 +46,7 @@ function Prims_algorithm(){
     //     if (VisCells[WallsInProcess[randomInd][1][0]][WallsInProcess[randomInd][1][1]] == false)
     //     {
     //         BreakWall(WallsInProcess[randomInd][0], WallsInProcess[randomInd][1]);
-    //         FindNeighWalls(WallsInProcess[randomInd][1][0], WallsInProcess[randomInd][1][1]);
+    //         FindNeighWallsPrims(WallsInProcess[randomInd][1][0], WallsInProcess[randomInd][1][1]);
     //         VisCells[WallsInProcess[randomInd][1][0]][WallsInProcess[randomInd][1][1]] = true;
     //     }
     //     WallsInProcess.splice(randomInd, 1);

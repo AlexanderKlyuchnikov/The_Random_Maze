@@ -27,7 +27,6 @@ body {
     background-position-x: 50%;
 }
 
-
 #main{
     width: 960px;
     height: 680px;
@@ -114,4 +113,3 @@ input[type="number"]:focus {
     pointer-events: none;
     visibility: hidden;
 } */
-
