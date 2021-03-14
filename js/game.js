@@ -14,6 +14,7 @@ var VisCells = [];
     renderType = 'Canvas';
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     renderType = 'DOM';
+    walllength = 36;
     width = Math.floor((windowwidth - wallwidth) / (walllength - wallwidth));
     height = Math.floor((windowheight - 30 - wallwidth) / (walllength - wallwidth));
 }                
@@ -79,24 +80,31 @@ document.getElementById("user_height").onkeyup = function () {
 }
 var user_alg = Crafty.e("2D, HTML, Persist").append(
     '<div class="radio-container">'+
-        '<div class="form-item radio-btn nth-3">'+
+        '<div class="radio-btn">'+
             '<input type="radio" name="alg_name" id="radio1">'+
             '<label class="radio_input" for="radio1">Алгоритм Прима</label>'+
         '</div>'+
-        '<div class="form-item radio-btn nth-3">'+
+        '<div class="radio-btn">'+
             '<input type="radio" name="alg_name" id="radio2" checked>'+
             '<label class="radio_input" for="radio2">Recursive Backtracker</label>'+
         '</div>'+
-        '<div class="form-item radio-btn nth-3">'+
+        '<div class="radio-btn">'+
             '<input type="radio" name="alg_name" id="radio3">'+
             '<label class="radio_input" for="radio3">Hunt and Kill</label>'+
         '</div>'+
-    '</div>')
-    .attr({ x: (windowwidth - 700) / 2, y: 300, w: 700, h: 100 });
+    '</div>');
 var start_gen = Crafty.e("2D, HTML, Persist")
-    .append('<input id="start_gen" type="button" class="buttons" value="СГЕНЕРИРОВАТЬ">')
-    .attr({ x: (windowwidth - 200) / 2, y: 380 });    
-
+    .append('<input id="start_gen" type="button" class="buttons" value="СГЕНЕРИРОВАТЬ">');
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+{
+    user_alg.attr({ x: (windowwidth - 250) / 2, y: 300, w: 250 });
+    start_gen.attr({ x: (windowwidth - 200) / 2, y: 480 });    
+}
+else
+{
+    user_alg.attr({ x: (windowwidth - 700) / 2, y: 300, w: 700 });
+    start_gen.attr({ x: (windowwidth - 200) / 2, y: 380 });
+}
 document.getElementById("start_gen").onclick = function () {
     if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         width = Number(document.getElementById("user_width").value, 10);

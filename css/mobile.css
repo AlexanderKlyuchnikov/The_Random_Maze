@@ -6,6 +6,26 @@
         padding-top: 0px;
         width: 100%;
         height: 100%;
-        margin-left: 0px;
+        padding-top: 1px;
+    }
+    body, #main, #game_window{
+        overflow-x: hidden;
+    }
+    .radio-container{
+        display: block;
+    }
+    .radio-container .radio-btn
+    {
+        width: 100%;
+        border-bottom: 2px solid rgb(74, 51, 10);
+        border-right: 0px;
+    }
+    .radio-container .radio-btn:last-child{
+        border-bottom: 0px;
+    }
+    .buttons{
+        background-color: rgb(74, 51, 10);
+        color: #ede3d8;
+        cursor: pointer;
     }
 }
