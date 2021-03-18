@@ -2,6 +2,9 @@
     #bg, #bg2{
         visibility: hidden;
     }
+    body{
+        background-color: rgb(240, 230, 222);
+    }
     #main{
         padding-top: 0px;
         width: 100%;
@@ -11,6 +14,7 @@
     body, #main, #game_window{
         overflow-x: hidden;
     }
+    
     .radio-container{
         display: block;
     }
@@ -27,5 +31,42 @@
         background-color: rgb(74, 51, 10);
         color: #ede3d8;
         cursor: pointer;
+    }
+    #rebuild_on_finish{
+        animation: rotate 1.5s linear infinite;
+    }
+    .control_btns{
+        background-color: red;
+    }
+    #contol_btns_container{
+        display: flex;
+        box-sizing: border-box;
+        padding-bottom: 4px;
+    }
+    #left, #right{
+        height: 100%;
+        width: 25%;
+    }
+    #left{
+        border-radius: 0 0 0 10px;
+    }
+    #right{
+        border-radius: 0 0 10px 0;
+    }
+    #up_down{
+        height: 100%;
+        width: 50%;
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+    #up,#down {
+        width: 100%;
+        height: calc((100% - 4px )/2);
+    }
+    #up{
+        margin-bottom: 4px;
+    }
+    #down{
+       
     }
 }

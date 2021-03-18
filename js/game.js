@@ -16,12 +16,17 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     renderType = 'DOM';
     walllength = 36;
     width = Math.floor((windowwidth - wallwidth) / (walllength - wallwidth));
-    height = Math.floor((windowheight - 30 - wallwidth) / (walllength - wallwidth));
+    height = Math.floor((windowheight - 100 - 30 - wallwidth) / (walllength - wallwidth));
 }                
 else
 {
     renderType = 'Canvas';    
 }
+
+mazewidth = walllength * width - wallwidth * (width - 1);
+mazeheight = walllength * height - wallwidth * (height - 1);
+
+
 Crafty.init(windowwidth, windowheight, document.getElementById("game_window"));
 var game_assets = {
             "sprites": {
@@ -118,6 +123,9 @@ document.getElementById("start_gen").onclick = function () {
           document.getElementById("user_height").value = "5";
         }
     }
+    else {
+       // document.documentElement.requestFullscreen(); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    }
     mazewidth = walllength * width - wallwidth * (width - 1);
     mazeheight = walllength * height - wallwidth * (height - 1);
     loffset = (windowwidth - mazewidth) / 2;
@@ -142,14 +150,18 @@ document.getElementById("start_gen").onclick = function () {
 var rebuild_game_scene = Crafty.e("2D, HTML, Persist")
     .append('<input id="rebuild_game_scene" type="button"  class="buttons" value="ПЕРЕСТРОИТЬ">')
     .attr({ x: (windowwidth - 150) / 2, y: 0 });
-var finish = Crafty.e("2D, " + renderType + ", finish, Collision, Persist").attr({ x: -200, y: -200 })
-        .collision(6, 6, 32, 0, 32, 32, 0, 32)
-        .checkHits('player')
-        .bind('HitOn', function () {
-        //--------------------------------------------------------------------------finish
-            Crafty.enterScene("finish");
-        //--------------------------------------------------------------------------finish
-        });
+var finish = Crafty.e("2D, " + renderType + ", finish, Collision, Persist")
+  .attr({
+    x: -200,
+    y: -200,
+    w: walllength - 2 * wallwidth,
+    h: walllength - 2 * wallwidth,
+  })
+  .collision(6, 6, 32, 0, 32, 32, 0, 32)
+  .checkHits("player")
+  .bind("HitOn", function () {
+    Crafty.enterScene("finish");
+  });
 var lastOKPosition = { x: 0, y: 0 };
 var player = Crafty.e("2D, " + renderType + ", Collision, Fourway, player, SpriteAnimation, Persist")
     .attr({x:-100, y: -100})
@@ -194,6 +206,22 @@ toffset = document.getElementById("rebuild_game_scene").clientHeight;
 document.getElementById("rebuild_game_scene").onclick = function () {
     Crafty.enterScene('menu');
 }
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+{
+    var control_entity = Crafty.e("2D, HTML, Persist").append(
+        '<div id="contol_btns_container">' +
+            '<div id="left" class="control_btns"></div>' +
+            '<div id="up_down" class="control_btns_updown">' +
+                '<div id="up" class="control_btns"></div>' +
+                '<div id="down" class="control_btns"></div>' +
+            '</div>' +
+            '<div id="right" class="control_btns"></div>' +
+        '</div>'
+    ).attr({ x: (windowwidth - mazewidth) / 2, y: mazeheight + 30, w: mazewidth, h: 100 });
+    document.getElementById("contol_btns_container").style.width = mazewidth + 'px';
+    document.getElementById("contol_btns_container").style.height = '100px';
+
+}
 //-------------------------------------------------------------------------------------------game scene entities
 
 
@@ -215,11 +243,14 @@ Crafty.defineScene('menu', function () {
     finish.visible = false;
     rebuild_game_scene.visible = false;
     rebuild_on_finish.visible = false;
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+        control_entity.visible = false;
 
     user_alg.visible = true;
     user_height.visible = true;
     user_width.visible = true;
     start_gen.visible = true;
+
     Crafty.e("2D, DOM, Text")
         .attr({ x: (windowwidth - 300) / 2, y: 50, w: 300, h: 40 })
         .text("РАЗМЕРЫ ЛАБИРИНТА")
@@ -275,6 +306,8 @@ Crafty.defineScene('game', function () {
     start_gen.visible = false;
     rebuild_on_finish.visible = false;
 
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+        control_entity.visible = true;
     rebuild_game_scene.visible = true;
     player.visible = true;
     finish.visible = true;
@@ -283,7 +316,6 @@ Crafty.defineScene('game', function () {
       x: loffset + walllength * (width - 1) - (width - 1) * wallwidth + 6,
       y: walllength * (height - 1) - (height - 1) * wallwidth + 6 + toffset,
     });
-    console.log(width + ':' + height);
     for (var i = 0; i <= height; ++i) {
         if (i < height)
             VisCells[i] = [];
@@ -312,6 +344,8 @@ Crafty.defineScene('finish', function () {
     rebuild_game_scene.visible = false;
     player.visible = false;
     finish.visible = false;
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+        control_entity.visible = false;
 
     rebuild_on_finish.visible = true;
     Crafty.e("2D, DOM, Text")
