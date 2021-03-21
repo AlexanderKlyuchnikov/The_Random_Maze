@@ -220,6 +220,21 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     ).attr({ x: (windowwidth - mazewidth) / 2, y: mazeheight + 30, w: mazewidth, h: 100 });
     document.getElementById("contol_btns_container").style.width = mazewidth + 'px';
     document.getElementById("contol_btns_container").style.height = '100px';
+    
+    var keys = [37, 38, 40, 39];
+        i = 0;
+    for (var el of document.getElementsByClassName("control_btns")) {
+        let key = keys[i];
+        el.addEventListener("touchstart", function (e) {
+            e.target.style.boxShadow = "0 0 8px black inset";
+            document.dispatchEvent(new KeyboardEvent('keydown', { 'keyCode': key }));
+        });
+        el.addEventListener("touchend", function (e) {
+            e.target.style.boxShadow = "0 0 0 black inset";
+            document.dispatchEvent(new KeyboardEvent('keyup', { 'keyCode': key }));
+        });
+        i++;
+    }
 
 }
 //-------------------------------------------------------------------------------------------game scene entities
