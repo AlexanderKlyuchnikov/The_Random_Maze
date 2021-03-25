@@ -1,4 +1,4 @@
-@media (max-width: 768px){
+@media (max-width: 834px){
     #bg, #bg2{
         visibility: hidden;
     }
@@ -88,5 +88,8 @@
         -o-transform: rotate(180deg);
         -ms-transform: rotate(180deg);
         -moz-transform: rotate(180deg);
+    }
+    #full_window{
+        height: 30px;
     }
 }
