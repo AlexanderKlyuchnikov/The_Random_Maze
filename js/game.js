@@ -61,28 +61,6 @@ Crafty.sprite(32, "img/sprite.png", {
 
 
 //-------------------------------------------------------------------------------------------menu scene entities
-var user_width = Crafty.e("2D, HTML, Persist").append('<input id="user_width" type="number" min="5" max="25" value="25" class="input_size"></input>')
-    .attr({
-            x: (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3,
-            y: 150
-        });
-document.getElementById("user_width").oninput = function () {
-    this.value = this.value.replace(/[^0-9]/g, "");
-}
-document.getElementById("user_width").onkeyup = function () {
-    if (Number(this.value) > 25) this.value = maxwidth;
-};
-var user_height = Crafty.e("2D, HTML, Persist").append('<input id="user_height" type="number" min="5" max="17" value="17" class="input_size">')
-    .attr({
-        x: 2 * (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3 + document.getElementById("user_width").clientWidth,
-        y: 150
-    });
-document.getElementById("user_height").oninput = function () {
-    this.value = this.value.replace(/[^0-9]/g, "");
-};
-document.getElementById("user_height").onkeyup = function () {
-    if (Number(this.value) > 17) this.value = maxheight;
-}
 var user_alg = Crafty.e("2D, HTML, Persist").append(
     '<div class="radio-container">'+
         '<div class="radio-btn">'+
@@ -103,28 +81,61 @@ var start_gen = Crafty.e("2D, HTML, Persist")
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
 {
     user_alg.attr({ x: (windowwidth - 250) / 2, y: 300, w: 250 });
-    start_gen.attr({ x: (windowwidth - 200) / 2, y: 480 });    
+    start_gen.attr({ x: (windowwidth - 200) / 2, y: 480 });
+    var full_window = Crafty.e("2D, HTML, Persist")
+        .append('<input id="full_window" type="button" class="buttons" value="НА ВЕСЬ ЭКРАН">')
+        .attr({ x: 10, y: 10 });
+    full_window._element.firstChild.style.width = (windowwidth - 20) + "px";
+    full_window._element.firstChild.onclick = function () {
+        document.documentElement.requestFullscreen();
+    }
+    document.addEventListener('fullscreenchange', function () {
+        if (full_window.visible == true)
+            full_window.visible = false;
+        else 
+            if (user_alg.visible == true) full_window.visible = true;
+            
+    })
 }
 else
 {
     user_alg.attr({ x: (windowwidth - 700) / 2, y: 300, w: 700 });
     start_gen.attr({ x: (windowwidth - 200) / 2, y: 380 });
+    var user_width = Crafty.e("2D, HTML, Persist").append('<input id="user_width" type="number" min="5" max="25" value="25" class="input_size"></input>')
+    .attr({
+            x: (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3,
+            y: 150
+        });
+    user_width._element.firstChild.oninput = function () {
+        this.value = this.value.replace(/[^0-9]/g, "");
+    }
+    user_width._element.firstChild.onkeyup = function () {
+        if (Number(this.value) > 25) this.value = maxwidth;
+    };
+    var user_height = Crafty.e("2D, HTML, Persist").append('<input id="user_height" type="number" min="5" max="17" value="17" class="input_size">')
+        .attr({
+            x: 2 * (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3 + document.getElementById("user_width").clientWidth,
+            y: 150
+        });
+    user_height._element.firstChild.oninput = function () {
+        this.value = this.value.replace(/[^0-9]/g, "");
+    };
+    user_height._element.firstChild.onkeyup = function () {
+        if (Number(this.value) > 17) this.value = maxheight;
+    };
 }
-document.getElementById("start_gen").onclick = function () {
+start_gen._element.firstChild.onclick = function () {
     if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        width = Number(document.getElementById("user_width").value, 10);
-        height = Number(document.getElementById("user_height").value, 10);
+        width = Number(user_width._element.firstChild.value, 10);
+        height = Number(user_height._element.firstChild.value, 10);
         if (width < 5) {
           width = 5;
-          document.getElementById("user_width").value = "5";
+          user_width._element.firstChild.value = "5";
         }
         if (height < 5) {
           height = 5;
-          document.getElementById("user_height").value = "5";
+          user_height._element.firstChild.value = "5";
         }
-    }
-    else {
-       // document.documentElement.requestFullscreen(); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
     mazewidth = walllength * width - wallwidth * (width - 1);
     mazeheight = walllength * height - wallwidth * (height - 1);
@@ -202,8 +213,8 @@ var player = Crafty.e("2D, " + renderType + ", Collision, Fourway, player, Sprit
         if (e.x == 1 && e.y == 0) this.animate("right", -1);
         if (e.x == -1 && e.y == 0) this.animate("left", -1);
     });
-toffset = document.getElementById("rebuild_game_scene").clientHeight;
-document.getElementById("rebuild_game_scene").onclick = function () {
+toffset = rebuild_game_scene._element.firstChild.clientHeight;
+rebuild_game_scene._element.firstChild.onclick = function () {
     Crafty.enterScene('menu');
 }
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
@@ -218,8 +229,8 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
             '<div id="right" class="control_btns"></div>' +
         '</div>'
     ).attr({ x: (windowwidth - mazewidth) / 2, y: mazeheight + 30, w: mazewidth, h: 100 });
-    document.getElementById("contol_btns_container").style.width = mazewidth + 'px';
-    document.getElementById("contol_btns_container").style.height = '100px';
+    control_entity._element.firstChild.style.width = mazewidth + "px";
+    control_entity._element.firstChild.style.height = '100px';
     
     var keys = [37, 38, 40, 39];
         i = 0;
@@ -245,9 +256,9 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 var rebuild_on_finish = Crafty.e("2D, HTML, Persist")
     .append('<div id="rebuild_on_finish"></div>')
     .attr({ x: (windowwidth - 50) / 2, y: 400 });
-document.getElementById("rebuild_on_finish").onclick = function () {
+rebuild_on_finish._element.firstChild.onclick = function () {
     Crafty.enterScene("menu");
-}
+};
 //-------------------------------------------------------------------------------------------finish scene entities
 
 
@@ -258,41 +269,48 @@ Crafty.defineScene('menu', function () {
     finish.visible = false;
     rebuild_game_scene.visible = false;
     rebuild_on_finish.visible = false;
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
-        control_entity.visible = false;
 
     user_alg.visible = true;
-    user_height.visible = true;
-    user_width.visible = true;
     start_gen.visible = true;
-
-    Crafty.e("2D, DOM, Text")
-        .attr({ x: (windowwidth - 300) / 2, y: 50, w: 300, h: 40 })
-        .text("РАЗМЕРЫ ЛАБИРИНТА")
-        .textAlign("center")
-        .textFont({ size: '22px', weight: 'bold', family: 'Arial'})
-        .textColor("rgb(74, 51, 10)")
-        .css({'cursor':'default'});
-    Crafty.e("2D, DOM, Text")
-        .attr({
-            x: (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3,
-            y: 120, w: 110, h: 40
-        })
-        .text("ШИРИНА")
-        .textAlign("center")
-        .textFont({ size: '18px', weight: 'bold', family: 'Arial'})
-        .textColor("rgb(74, 51, 10)")
-        .css({'cursor':'default'});
-    Crafty.e("2D, DOM, Text")
-        .attr({
-            x: 2 * (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3 + document.getElementById("user_width").clientWidth,
-            y: 120, w: 110, h: 40
-        })
-        .text("ВЫСОТА")
-        .textAlign("center")
-        .textFont({ size: '18px', weight: 'bold', family: 'Arial'})
-        .textColor("rgb(74, 51, 10)")
-        .css({'cursor':'default'});
+    console.log(document.fullscreenElement);
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    {
+        control_entity.visible = false;
+        if (document.fullscreenElement == null)
+            full_window.visible = true;
+    }
+    else
+    {
+        user_height.visible = true;
+        user_width.visible = true;
+        Crafty.e("2D, DOM, Text")
+            .attr({ x: (windowwidth - 300) / 2, y: 50, w: 300, h: 40 })
+            .text("РАЗМЕРЫ ЛАБИРИНТА")
+            .textAlign("center")
+            .textFont({ size: '22px', weight: 'bold', family: 'Arial'})
+            .textColor("rgb(74, 51, 10)")
+            .css({'cursor':'default'});
+        Crafty.e("2D, DOM, Text")
+            .attr({
+                x: (windowwidth - 2 * user_width._element.firstChild.clientWidth) / 3,
+                y: 120, w: 110, h: 40
+            })
+            .text("ШИРИНА")
+            .textAlign("center")
+            .textFont({ size: '18px', weight: 'bold', family: 'Arial'})
+            .textColor("rgb(74, 51, 10)")
+            .css({'cursor':'default'});
+        Crafty.e("2D, DOM, Text")
+            .attr({
+                x: 2 * (windowwidth - 2 * user_width._element.firstChild.clientWidth) / 3 + user_width._element.firstChild.clientWidth,
+                y: 120, w: 110, h: 40
+            })
+            .text("ВЫСОТА")
+            .textAlign("center")
+            .textFont({ size: '18px', weight: 'bold', family: 'Arial'})
+            .textColor("rgb(74, 51, 10)")
+            .css({'cursor':'default'});
+    }
     Crafty.e("2D, DOM, Text")
         .attr({ x: (windowwidth - 300) / 2, y: 220, w: 300, h: 40 })
         .text("АЛГОРИТМ ПОСТРОЕНИЯ")
@@ -316,13 +334,19 @@ Crafty.enterScene("menu");
 //-------------------------------------------------------------------------------------------game scene
 Crafty.defineScene('game', function () {
     user_alg.visible = false;
-    user_height.visible = false;
-    user_width.visible = false;
     start_gen.visible = false;
     rebuild_on_finish.visible = false;
 
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    {
         control_entity.visible = true;
+        full_window.visible = false;
+    }
+    else
+    {
+        user_height.visible = false;
+        user_width.visible = false;
+    }
     rebuild_game_scene.visible = true;
     player.visible = true;
     finish.visible = true;
@@ -353,15 +377,19 @@ Crafty.defineScene('game', function () {
 //-------------------------------------------------------------------------------------------finish scene
 Crafty.defineScene('finish', function () {
     user_alg.visible = false;
-    user_height.visible = false;
-    user_width.visible = false;
     start_gen.visible = false;
     rebuild_game_scene.visible = false;
     player.visible = false;
     finish.visible = false;
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    {
         control_entity.visible = false;
-
+        full_window.visible = false;
+    }
+    else {
+        user_height.visible = false;
+        user_width.visible = false;
+    }
     rebuild_on_finish.visible = true;
     Crafty.e("2D, DOM, Text")
         .attr({ x: 200, y: 200, w: 750, h: 200 })
@@ -401,5 +429,3 @@ function FindUnVisNeigh(y, x) {
 function inside(y, x) {
     return y < height && y >= 0 && x < width && x >= 0 ? true : false;
 }
-
-
