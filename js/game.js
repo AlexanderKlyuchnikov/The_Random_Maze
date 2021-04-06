@@ -26,7 +26,6 @@ else
 mazewidth = walllength * width - wallwidth * (width - 1);
 mazeheight = walllength * height - wallwidth * (height - 1);
 
-
 Crafty.init(windowwidth, windowheight, document.getElementById("game_window"));
 var game_assets = {
             "sprites": {
@@ -58,7 +57,6 @@ Crafty.load(game_assets);
 Crafty.sprite(32, "img/sprite.png", {
   player: [0, 0],
 });
-
 
 //-------------------------------------------------------------------------------------------menu scene entities
 var user_alg = Crafty.e("2D, HTML, Persist").append(
@@ -389,12 +387,30 @@ Crafty.defineScene('finish', function () {
         user_width.visible = false;
     }
     rebuild_on_finish.visible = true;
-    Crafty.e("2D, DOM, Text")
-        .attr({ x: 200, y: 200, w: 750, h: 200 })
-        .text("ЗДЕСЬ НУЖНО ЧТО-ТО КРАСИВОЕ ПРИДУМАТЬ")
-        .textAlign("center")
-        .textFont({ size: '18px', weight: 'bold', family: 'Arial'})
-        .textColor("rgb(74, 51, 10)");
+    // Crafty.e("2D, DOM, Text")
+    //     .attr({ x: 200, y: 200, w: 750, h: 200 })
+    //     .text("ЗДЕСЬ НУЖНО ЧТО-ТО КРАСИВОЕ ПРИДУМАТЬ")
+    //     .textAlign("center")
+    //     .textFont({ size: '18px', weight: 'bold', family: 'Arial'})
+    //     .textColor("rgb(74, 51, 10)");
+    
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   
+    var shift = 70; 
+    Crafty.e("2D, " + renderType + ", player, Tween")
+        .attr({x: windowwidth / 2 - 70/2, y:100, w:70, h:70})
+        .tween({x: windowwidth / 2 - 70/2 + shift, y: 100 + shift}, 500, "smoothStep")
+        .bind("TweenEnd", function (){
+            if (this.x == windowwidth / 2 - 70/2 + shift && this.y == 100 + shift)
+                this.tween({x: windowwidth / 2 - 70/2, y: 100 + shift + shift}, 500), "smoothStep";
+            if (this.x == windowwidth / 2 - 70/2 && this.y == 100 + shift + shift)
+                this.tween({x: windowwidth / 2 - 70/2 - shift, y: 100 + shift}, 500, "smoothStep");
+            if (this.x == windowwidth / 2 - 70/2 - shift && this.y == 100 + shift)
+                this.tween({x: windowwidth / 2 - 70/2, y: 100}, 500, "smoothStep");
+            if (this.x == windowwidth / 2 - 70/2 && this.y == 100)   
+                this.tween({x: windowwidth / 2 - 70/2 + shift, y: 100 + shift}, 500, "smoothStep");
+        });
+
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!    
 })
 
 //-------------------------------------------------------------------------------------------finish scene
