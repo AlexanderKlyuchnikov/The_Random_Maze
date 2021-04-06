@@ -160,7 +160,7 @@ start_gen._element.firstChild.onclick = function () {
 //-------------------------------------------------------------------------------------------game scene entities
 var rebuild_game_scene = Crafty.e("2D, HTML, Persist")
     .append('<input id="rebuild_game_scene" type="button"  class="buttons" value="ПЕРЕСТРОИТЬ">')
-    .attr({ x: (windowwidth - 150) / 2, y: 0 });
+    .attr({ x: (windowwidth - 150) / 2, y: 0, z: 5 });
 var finish = Crafty.e("2D, " + renderType + ", finish, Collision, Persist")
   .attr({
     x: -200,
@@ -174,7 +174,7 @@ var finish = Crafty.e("2D, " + renderType + ", finish, Collision, Persist")
     Crafty.enterScene("finish");
   });
 var lastOKPosition = { x: 0, y: 0 };
-var player = Crafty.e("2D, " + renderType + ", Collision, Fourway, player, SpriteAnimation, Persist")
+var player = Crafty.e("2D, " + renderType + ", Collision, Motion, Fourway, player, SpriteAnimation, Persist")
     .attr({x:-100, y: -100})
     .fourway(100)
     .reel("down", 500, 0, 0, 4)
@@ -246,7 +246,6 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
         });
         i++;
     }
-
 }
 //-------------------------------------------------------------------------------------------game scene entities
 
@@ -272,7 +271,6 @@ Crafty.defineScene('menu', function () {
 
     user_alg.visible = true;
     start_gen.visible = true;
-    console.log(document.fullscreenElement);
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
     {
         control_entity.visible = false;
