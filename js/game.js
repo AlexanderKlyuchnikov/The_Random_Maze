@@ -26,7 +26,6 @@ else
 mazewidth = walllength * width - wallwidth * (width - 1);
 mazeheight = walllength * height - wallwidth * (height - 1);
 
-
 Crafty.init(windowwidth, windowheight, document.getElementById("game_window"));
 var game_assets = {
             "sprites": {
@@ -158,8 +157,6 @@ start_gen._element.firstChild.onclick = function () {
 }      
 //-------------------------------------------------------------------------------------------menu scene entities
 
-
-
 //-------------------------------------------------------------------------------------------game scene entities
 var rebuild_game_scene = Crafty.e("2D, HTML, Persist")
     .append('<input id="rebuild_game_scene" type="button"  class="buttons" value="ПЕРЕСТРОИТЬ">')
@@ -252,8 +249,6 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 }
 //-------------------------------------------------------------------------------------------game scene entities
 
-
-
 //-------------------------------------------------------------------------------------------finish scene entities
 var rebuild_on_finish = Crafty.e("2D, HTML, Persist")
     .append('<div id="rebuild_on_finish"></div>')
@@ -262,8 +257,6 @@ rebuild_on_finish._element.firstChild.onclick = function () {
     Crafty.enterScene("menu");
 };
 //-------------------------------------------------------------------------------------------finish scene entities
-
-
 
 //-------------------------------------------------------------------------------------------menu scene
 Crafty.defineScene('menu', function () {
@@ -330,8 +323,6 @@ Crafty.defineScene('menu', function () {
 Crafty.enterScene("menu");
 //-------------------------------------------------------------------------------------------menu scene
 
-
-
 //-------------------------------------------------------------------------------------------game scene
 Crafty.defineScene('game', function () {
     user_alg.visible = false;
@@ -372,8 +363,6 @@ Crafty.defineScene('game', function () {
     }
 })
 //-------------------------------------------------------------------------------------------game scene
-
-
 
 //-------------------------------------------------------------------------------------------finish scene
 Crafty.defineScene('finish', function () {
@@ -425,7 +414,6 @@ Crafty.defineScene('finish', function () {
             }
         });
 })
-
 //-------------------------------------------------------------------------------------------finish scene
 
 function BreakWall(firstP, secondP) {
@@ -442,6 +430,7 @@ function BreakWall(firstP, secondP) {
             Crafty("lwall" + secondP[0] + "_" + secondP[1]).destroy();
         }
 }
+
 function FindUnVisNeigh(y, x) {
         if (inside(y + 1, x) && VisCells[y + 1][x] == false)
             UnVisNeigh.push([y + 1, x]);
