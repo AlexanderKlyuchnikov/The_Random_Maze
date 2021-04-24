@@ -75,18 +75,24 @@ Crafty.sprite(32, "img/sprite.png", {
 //-------------------------------------------------------------------------------------------menu scene entities
 var user_alg = Crafty.e("2D, HTML, Persist").append(
     '<div class="radio-container">'+
-        '<div class="radio-btn">'+
-            '<input type="radio" name="alg_name" id="radio1">'+
-            '<label class="radio_input" for="radio1">Алгоритм Прима</label>'+
-        '</div>'+
-        '<div class="radio-btn">'+
-            '<input type="radio" name="alg_name" id="radio2" checked>'+
-            '<label class="radio_input" for="radio2">Recursive Backtracker</label>'+
-        '</div>'+
-        '<div class="radio-btn">'+
-            '<input type="radio" name="alg_name" id="radio3">'+
-            '<label class="radio_input" for="radio3">Hunt and Kill</label>'+
-        '</div>'+
+        '<div class="top-radio-container">'+
+            '<div class="radio-btn">'+
+                '<input type="radio" name="alg_name" id="radio1">'+
+                '<label class="radio_input" for="radio1">Алгоритм Прима</label>'+
+            '</div>'+
+            '<div class="radio-btn">'+
+                '<input type="radio" name="alg_name" id="radio2" checked>'+
+                '<label class="radio_input" for="radio2">Recursive Backtracker</label>'+
+            '</div>'+
+            '<div class="radio-btn">'+
+                '<input type="radio" name="alg_name" id="radio3">'+
+                '<label class="radio_input" for="radio3">Hunt and Kill</label>'+
+            '</div>'+
+        '</div>' +
+        '<div class="radio-btn" id="radio-btn4">' +
+            '<input type="radio" name="alg_name" id="radio4">'+
+            '<label class="radio_input" for="radio4">Шестиугольный</label>' +
+        '</div>' +
     '</div>');
 var start_gen = Crafty.e("2D, HTML, Persist")
     .append('<input id="start_gen" type="button" class="buttons" value="СГЕНЕРИРОВАТЬ">');
@@ -111,9 +117,9 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 }
 else
 {
-    user_alg.attr({ x: (windowwidth - 700) / 2, y: 300, w: 700 });
+    user_alg.attr({ x: (windowwidth - 700) / 2, y: 280, w: 700 });
     start_gen.attr({ x: (windowwidth - 200) / 2, y: 380 });
-    var user_width = Crafty.e("2D, HTML, Persist").append('<input id="user_width" type="number" min="5" max="25" value="5" class="input_size"></input>')
+    var user_width = Crafty.e("2D, HTML, Persist").append('<input id="user_width" type="number" min="5" max="' + maxwidth + '" value="25" class="input_size"></input>')
     .attr({
             x: (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3,
             y: 150
@@ -122,9 +128,9 @@ else
         this.value = this.value.replace(/[^0-9]/g, "");
     }
     user_width._element.firstChild.onkeyup = function () {
-        if (Number(this.value) > 25) this.value = maxwidth;
+        if (Number(this.value) > maxwidth) this.value = maxwidth;
     };
-    var user_height = Crafty.e("2D, HTML, Persist").append('<input id="user_height" type="number" min="5" max="17" value="5" class="input_size">')
+    var user_height = Crafty.e("2D, HTML, Persist").append('<input id="user_height" type="number" min="5" max="' + maxheight + '" value="17" class="input_size">')
         .attr({
             x: 2 * (windowwidth - 2 * document.getElementById("user_width").clientWidth) / 3 + document.getElementById("user_width").clientWidth,
             y: 150
@@ -133,9 +139,25 @@ else
         this.value = this.value.replace(/[^0-9]/g, "");
     };
     user_height._element.firstChild.onkeyup = function () {
-        if (Number(this.value) > 17) this.value = maxheight;
+        if (Number(this.value) > maxheight) this.value = maxheight;
     };
+    var algorithm = document.getElementsByName("alg_name");
+    for (var i = 0; i < algorithm.length; ++i)
+        algorithm[i].addEventListener("change", function () {
+            if (algorithm[3].checked)
+            {
+                maxwidth = 22;
+                maxheight = 12;
+                if (Number(user_width._element.firstChild.value) > maxwidth) user_width._element.firstChild.value = maxwidth;
+                if (Number(user_height._element.firstChild.value) > maxheight) user_height._element.firstChild.value = maxheight;
+            }
+            else {
+                maxwidth = 25;
+                maxheight = 17;
+            }
+        })
 }
+
 start_gen._element.firstChild.onclick = function () {
     if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         width = Number(user_width._element.firstChild.value, 10);
@@ -148,24 +170,25 @@ start_gen._element.firstChild.onclick = function () {
           height = 5;
           user_height._element.firstChild.value = "5";
         }
+        
     }
     mazewidth = walllength * width - wallwidth * (width - 1);
     mazeheight = walllength * height - wallwidth * (height - 1);
     loffset = (windowwidth - mazewidth) / 2;
     Crafty.enterScene("game");
-
     var algorithm = document.getElementsByName("alg_name");
-    // if (algorithm[0].checked) {
-    //     Prims_algorithm();
-    //   }
-    // if (algorithm[1].checked) {
-    //       recursive_backtracker();
-    //   }
-    // if (algorithm[2].checked) {
-    //     hunt_and_kill();
-    // }
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //hex();
+    if (algorithm[0].checked) {
+        Prims_algorithm();
+      }
+    if (algorithm[1].checked) {
+        recursive_backtracker();
+      }
+    if (algorithm[2].checked) {
+        hunt_and_kill();
+    }
+    if (algorithm[3].checked) {
+        hex();
+    }
 }      
 //-------------------------------------------------------------------------------------------menu scene entities
 
@@ -367,88 +390,91 @@ Crafty.defineScene('game', function () {
     }
     rebuild_game_scene.visible = true;
     player.visible = true;
-    finish.visible = true;
-    player.attr({ x: loffset + wallwidth, y: wallwidth + toffset, z: 1 }).animate("down", 1).pauseAnimation();
-    finish.attr({
-      x: loffset + walllength * (width - 1) - (width - 1) * wallwidth + 6,
-      y: walllength * (height - 1) - (height - 1) * wallwidth + 6 + toffset,
-    });
-    
-    // for (var i = 0; i <= height; ++i) {
-    //     if (i < height)
-    //         VisCells[i] = [];
-    //     for (var j = 0; j <= width; ++j) {
-    //         if (i != height)
-    //             Crafty.e("2D, " + renderType + ", Collision, wall, lwall, lwall" + i + '_' + j)
-    //                 .attr({ x: loffset + walllength * j - j * wallwidth, y: walllength * i - i * wallwidth + toffset, z: 2, w: wallwidth, h:walllength })
-    //         if (j != width)
-    //             Crafty.e("2D, " + renderType + ", Collision, wall, twall, twall" + i + '_' + j)
-    //                 .attr({ x: loffset + walllength * j - j * wallwidth, y: walllength * i - i * wallwidth + toffset, z: 2, w: walllength, h: wallwidth })
-    //         if (j < width && i < height)
-    //             VisCells[i].push(false);
-    //     }
-    // }
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    finish.visible = false
-    finish_hex.visible = true;
-    mazewidth = Math.floor((width + 1) / 2) * hex_width + Math.floor(width / 2) * hex_width / 2 - hwallwidth * (width - 1);
-    mazeheight = hex_height * (height + 0.5);
-    loffset = (windowwidth - mazewidth) / 2;
-    toffset = 50;
-    player.attr({ x: loffset + hex_width / 2 - player.w / 2, y: toffset + hex_height / 2 - player.h / 2 });
-    for (var i = 0; i < height; i++)
-    {
-        VisCells[i] = [];
-        for (var j = 0; j < width; ++j)
-        {
-            VisCells[i].push(false);
-            var cx = loffset + hex_width / 2 + (hex_width * 3 / 4 - hwallwidth) * j;
-                cy = toffset + hex_height / 2 + (hex_height - hwallwidth) * i;
-            if (j % 2 == 1)
-                cy += hex_height / 2;
-            Crafty.e("2D, " + renderType + ", Collision, wall, twall, twall" + i + '_' + j)
-                .attr({ x: cx - hex_width / 4, y: cy - hex_height / 2, z: 2, w: hwalllength, h: hwallwidth });
-            Crafty.e("2D, " + renderType + ", Collision, wall, lwall, ltwall" + i + '_' + j)
-                .attr({ x: cx - hex_width / 4, y: cy - hex_height / 2, z: 2, w: hwallwidth, h: hwalllength })
-                .origin("top middle")
-                .rotation = 30;
-            Crafty.e("2D, " + renderType + ", Collision, wall, lwall, lbwall" + i + '_' + j)
-                .attr({ x: cx - hex_width / 2, y: cy, z: 2, w: hwallwidth, h: hwalllength })
-                .origin("top middle")
-                .rotation = -30;
-            if (i == 0 && j % 2 == 0)
-            {
-                Crafty.e("2D, " + renderType + ", Collision, wall, lwall")
-                    .attr({ x: cx + hex_width / 4 - hwallwidth, y: cy - hex_height / 2, z: 2, w: hwallwidth, h: hwalllength })
-                    .origin("top middle")
-                    .rotation = -30;  
+    var algorithm = document.getElementsByName("alg_name");
+    if (!algorithm[3].checked) {
+        rebuild_game_scene._element.firstChild.style.borderRadius = "6px 6px 0 0";
+        toffset = rebuild_game_scene._element.firstChild.clientHeight;
+        finish.visible = true;
+        finish_hex.visible = false;
+        finish_hex.attr({ x: -200, y: -200 });
+        player.attr({ x: loffset + wallwidth, y: wallwidth + toffset, z: 1 }).animate("down", 1).pauseAnimation();
+        finish.attr({
+        x: loffset + walllength * (width - 1) - (width - 1) * wallwidth + 6,
+        y: walllength * (height - 1) - (height - 1) * wallwidth + 6 + toffset,
+        });
+        for (var i = 0; i <= height; ++i) {
+            if (i < height)
+                VisCells[i] = [];
+            for (var j = 0; j <= width; ++j) {
+                if (i != height)
+                    Crafty.e("2D, " + renderType + ", Collision, wall, lwall, lwall" + i + '_' + j)
+                        .attr({ x: loffset + walllength * j - j * wallwidth, y: walllength * i - i * wallwidth + toffset, z: 2, w: wallwidth, h: walllength })
+                if (j != width)
+                    Crafty.e("2D, " + renderType + ", Collision, wall, twall, twall" + i + '_' + j)
+                        .attr({ x: loffset + walllength * j - j * wallwidth, y: walllength * i - i * wallwidth + toffset, z: 2, w: walllength, h: wallwidth })
+                if (j < width && i < height)
+                    VisCells[i].push(false);
             }
-            if (j == width - 1)
-            {
-                Crafty.e("2D, " + renderType + ", Collision, wall, lwall")
-                    .attr({ x: cx + hex_width / 4 - hwallwidth, y: cy - hex_height / 2, z: 2, w: hwallwidth, h: hwalllength })
-                    .origin("top middle")
-                    .rotation = -30;
-                Crafty.e("2D, " + renderType + ", Collision, wall, lwall")
-                    .attr({ x: cx + hex_width / 2 - hwallwidth, y: cy, z: 2, w: hwallwidth, h: hwalllength })
+        }
+    }
+    else {
+        rebuild_game_scene._element.firstChild.style.borderRadius = "6px";
+        finish.visible = false;
+        finish.attr({ x: -200, y: -200 });
+        finish_hex.visible = true;
+        mazewidth = Math.floor((width + 1) / 2) * hex_width + Math.floor(width / 2) * hex_width / 2 - hwallwidth * (width - 1);
+        mazeheight = hex_height * (height + 0.5);
+        loffset = (windowwidth - mazewidth) / 2;
+        toffset = rebuild_game_scene._element.firstChild.clientHeight + 10;
+        player.attr({ x: loffset + hex_width / 2 - player.w / 2, y: toffset + hex_height / 2 - player.h / 2 });
+        for (var i = 0; i < height; i++) {
+            VisCells[i] = [];
+            for (var j = 0; j < width; ++j) {
+                VisCells[i].push(false);
+                var cx = loffset + hex_width / 2 + (hex_width * 3 / 4 - hwallwidth) * j;
+                cy = toffset + hex_height / 2 + (hex_height - hwallwidth) * i;
+                if (j % 2 == 1)
+                    cy += hex_height / 2;
+                Crafty.e("2D, " + renderType + ", Collision, wall, twall, twall" + i + '_' + j)
+                    .attr({ x: cx - hex_width / 4, y: cy - hex_height / 2, z: 2, w: hwalllength, h: hwallwidth });
+                Crafty.e("2D, " + renderType + ", Collision, wall, lwall, ltwall" + i + '_' + j)
+                    .attr({ x: cx - hex_width / 4, y: cy - hex_height / 2, z: 2, w: hwallwidth, h: hwalllength })
                     .origin("top middle")
                     .rotation = 30;
-            }
-            if (i == height - 1)
-            {
-                Crafty.e("2D, " + renderType + ", Collision, wall, twall")
-                    .attr({ x: cx - hex_width / 4, y: cy + hex_height / 2 - hwallwidth, z: 2, w: hwalllength, h: hwallwidth });
-                if (j % 2 == 1)
+                Crafty.e("2D, " + renderType + ", Collision, wall, lwall, lbwall" + i + '_' + j)
+                    .attr({ x: cx - hex_width / 2, y: cy, z: 2, w: hwallwidth, h: hwalllength })
+                    .origin("top middle")
+                    .rotation = -30;
+                if (i == 0 && j % 2 == 0) {
+                    Crafty.e("2D, " + renderType + ", Collision, wall, lwall")
+                        .attr({ x: cx + hex_width / 4 - hwallwidth, y: cy - hex_height / 2, z: 2, w: hwallwidth, h: hwalllength })
+                        .origin("top middle")
+                        .rotation = -30;
+                }
+                if (j == width - 1) {
+                    Crafty.e("2D, " + renderType + ", Collision, wall, lwall")
+                        .attr({ x: cx + hex_width / 4 - hwallwidth, y: cy - hex_height / 2, z: 2, w: hwallwidth, h: hwalllength })
+                        .origin("top middle")
+                        .rotation = -30;
                     Crafty.e("2D, " + renderType + ", Collision, wall, lwall")
                         .attr({ x: cx + hex_width / 2 - hwallwidth, y: cy, z: 2, w: hwallwidth, h: hwalllength })
                         .origin("top middle")
                         .rotation = 30;
+                }
+                if (i == height - 1) {
+                    Crafty.e("2D, " + renderType + ", Collision, wall, twall")
+                        .attr({ x: cx - hex_width / 4, y: cy + hex_height / 2 - hwallwidth, z: 2, w: hwalllength, h: hwallwidth });
+                    if (j % 2 == 1)
+                        Crafty.e("2D, " + renderType + ", Collision, wall, lwall")
+                            .attr({ x: cx + hex_width / 2 - hwallwidth, y: cy, z: 2, w: hwallwidth, h: hwalllength })
+                            .origin("top middle")
+                            .rotation = 30;
+                }
+                if (i == height - 1 && j == width - 1)
+                    finish_hex.attr({ x: cx - hex_width / 4, y: cy - wallwidth });
             }
-            if (i == height - 1 && j == width - 1)
-                finish_hex.attr({ x: cx - hex_width / 4, y: cy - wallwidth });
         }
     }
-    hex();
 })
 //-------------------------------------------------------------------------------------------game scene
 
