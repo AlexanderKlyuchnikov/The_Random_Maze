@@ -19,6 +19,9 @@ var VisCells = [];
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     renderType = 'DOM';
     walllength = 36;
+    hwalllength = 0.75 * walllength;
+    hex_width = hwalllength * 2;
+    hex_height = hwalllength * Math.sqrt(3);
     width = Math.floor((windowwidth - wallwidth) / (walllength - wallwidth));
     height = Math.floor((windowheight - 100 - 30 - wallwidth) / (walllength - wallwidth));
 }                
@@ -159,6 +162,7 @@ else
 }
 
 start_gen._element.firstChild.onclick = function () {
+    var algorithm = document.getElementsByName("alg_name");
     if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         width = Number(user_width._element.firstChild.value, 10);
         height = Number(user_height._element.firstChild.value, 10);
@@ -170,13 +174,19 @@ start_gen._element.firstChild.onclick = function () {
           height = 5;
           user_height._element.firstChild.value = "5";
         }
-        
     }
-    mazewidth = walllength * width - wallwidth * (width - 1);
-    mazeheight = walllength * height - wallwidth * (height - 1);
-    loffset = (windowwidth - mazewidth) / 2;
+    else
+    {
+        if (algorithm[3].checked) {
+            width = Math.floor((windowwidth - hwallwidth) / (hex_width * 7 / 8 - hwallwidth));
+            height = Math.floor((windowheight - 100 - 30 - 10 - hwallwidth - hex_height / 2) / hex_height );
+        }
+        else {
+            width = Math.floor((windowwidth - wallwidth) / (walllength - wallwidth));
+            height = Math.floor((windowheight - 100 - 30 - wallwidth) / (walllength - wallwidth));
+        }
+    }
     Crafty.enterScene("game");
-    var algorithm = document.getElementsByName("alg_name");
     if (algorithm[0].checked) {
         Prims_algorithm();
       }
@@ -393,6 +403,9 @@ Crafty.defineScene('game', function () {
     var algorithm = document.getElementsByName("alg_name");
     if (!algorithm[3].checked) {
         rebuild_game_scene._element.firstChild.style.borderRadius = "6px 6px 0 0";
+        mazewidth = walllength * width - wallwidth * (width - 1);
+        mazeheight = walllength * height - wallwidth * (height - 1);
+        loffset = (windowwidth - mazewidth) / 2;
         toffset = rebuild_game_scene._element.firstChild.clientHeight;
         finish.visible = true;
         finish_hex.visible = false;
