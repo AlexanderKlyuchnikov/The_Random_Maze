@@ -225,8 +225,9 @@ var finish_hex = Crafty.e("2D, " + renderType + ", finish_hex, Collision, Persis
         y: -200,
         w: hex_width * 3 / 4,
         h: hex_width / 2,
-        z:1
+        z: 1
     })
+    .collision(15, 4, 45, 0, 45, 29, 0, 29)
     .checkHits("player")
     .bind("HitOn", function () {
         Crafty.enterScene("finish");
@@ -243,7 +244,7 @@ var player = Crafty.e("2D, " + renderType + ", Collision, Motion, Fourway, playe
     .reel("up", 500, 0, 5, 4)
     .reel("left_up", 500, 0, 6, 4)
     .reel("right_up", 500, 0, 7, 4)
-    .collision(10, 8, 22, 8, 22, 24, 10, 24)
+    .collision(10, 9, 21, 9, 18, 23, 14, 23)
     .bind('Move', function() {
         
         if (this.hit("wall"))
