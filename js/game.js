@@ -244,7 +244,7 @@ var player = Crafty.e("2D, " + renderType + ", Collision, Motion, Fourway, playe
     .reel("up", 500, 0, 5, 4)
     .reel("left_up", 500, 0, 6, 4)
     .reel("right_up", 500, 0, 7, 4)
-    .collision(10, 9, 21, 9, 18, 23, 14, 23)
+    .collision(11, 9, 20, 9, 20, 23, 11, 23)
     .bind('Move', function() {
         
         if (this.hit("wall"))
@@ -411,7 +411,9 @@ Crafty.defineScene('game', function () {
         finish.visible = true;
         finish_hex.visible = false;
         finish_hex.attr({ x: -200, y: -200 });
-        player.attr({ x: loffset + wallwidth, y: wallwidth + toffset, z: 1 }).animate("down", 1).pauseAnimation();
+        player.attr({ x: loffset + wallwidth, y: wallwidth + toffset, z: 1, w: 32, h: 32 })
+            .collision(11, 9, 20, 9, 20, 23, 11, 23)
+            .animate("down", 1).pauseAnimation();
         finish.attr({
         x: loffset + walllength * (width - 1) - (width - 1) * wallwidth + 6,
         y: walllength * (height - 1) - (height - 1) * wallwidth + 6 + toffset,
@@ -440,7 +442,9 @@ Crafty.defineScene('game', function () {
         mazeheight = hex_height * (height + 0.5);
         loffset = (windowwidth - mazewidth) / 2;
         toffset = rebuild_game_scene._element.firstChild.clientHeight + 10;
-        player.attr({ x: loffset + hex_width / 2 - player.w / 2, y: toffset + hex_height / 2 - player.h / 2 });
+        player.attr({ x: loffset + hex_width / 2 - player.w / 2, y: toffset + hex_height / 2 - player.h / 2, z:1, w:28, h:28 })
+            .collision(10, 7, 18, 7, 18, 20, 10, 20)
+            .animate("down", 1).pauseAnimation();
         for (var i = 0; i < height; i++) {
             VisCells[i] = [];
             for (var j = 0; j < width; ++j) {
