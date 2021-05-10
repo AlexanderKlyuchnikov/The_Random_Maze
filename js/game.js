@@ -16,6 +16,9 @@ var VisCells = [];
     hwalllength = 0.75 * walllength;
     hex_width = hwalllength * 2;
     hex_height = hwalllength * Math.sqrt(3);
+    avail_height = document.documentElement.clientHeight - 200;
+    
+Crafty.init(windowwidth, windowheight, document.getElementById("game_window"));   
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     renderType = 'DOM';
     walllength = 36;
@@ -27,12 +30,11 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 }                
 else
 {
-    renderType = 'Canvas';    
+    renderType = 'Canvas';
 }
 mazewidth = walllength * width - wallwidth * (width - 1);
 mazeheight = walllength * height - wallwidth * (height - 1);
 
-Crafty.init(windowwidth, windowheight, document.getElementById("game_window"));
 var game_assets = {
             "sprites": {
                 "img/twall.png": {
@@ -388,7 +390,6 @@ Crafty.defineScene('game', function () {
     user_alg.visible = false;
     start_gen.visible = false;
     rebuild_on_finish.visible = false;
-
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
     {
         control_entity.visible = true;
@@ -491,6 +492,14 @@ Crafty.defineScene('game', function () {
                 if (i == height - 1 && j == width - 1)
                     finish_hex.attr({ x: cx - hex_width / 4, y: cy - wallwidth });
             }
+        }
+    }
+    if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    {
+        if (avail_height < windowheight)
+        {
+            Crafty.viewport.scale(avail_height / windowheight);
+            Crafty.viewport.scroll("_x", (1 - avail_height / windowheight) * windowwidth / 2);
         }
     }
 })
