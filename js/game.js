@@ -83,20 +83,20 @@ var user_alg = Crafty.e("2D, HTML, Persist").append(
         '<div class="top-radio-container">'+
             '<div class="radio-btn">'+
                 '<input type="radio" name="alg_name" id="radio1">'+
-                '<label class="radio_input" for="radio1">Алгоритм Прима</label>'+
+                '<label class="radio_input" for="radio1">Алгоритм Прима ★</label>'+
             '</div>'+
             '<div class="radio-btn">'+
                 '<input type="radio" name="alg_name" id="radio2" checked>'+
-                '<label class="radio_input" for="radio2">Recursive Backtracker</label>'+
+                '<label class="radio_input" for="radio2">Recursive Backtracker ★★</label>'+
             '</div>'+
             '<div class="radio-btn">'+
                 '<input type="radio" name="alg_name" id="radio3">'+
-                '<label class="radio_input" for="radio3">Hunt and Kill</label>'+
+                '<label class="radio_input" for="radio3">Hunt and Kill ★★</label>'+
             '</div>'+
         '</div>' +
         '<div class="radio-btn" id="radio-btn4">' +
             '<input type="radio" name="alg_name" id="radio4">'+
-            '<label class="radio_input" for="radio4">Шестиугольный</label>' +
+            '<label class="radio_input" for="radio4">Шестиугольный ★★★</label>' +
         '</div>' +
     '</div>');
 var start_gen = Crafty.e("2D, HTML, Persist")
