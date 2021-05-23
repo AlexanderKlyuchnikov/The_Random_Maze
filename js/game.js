@@ -168,6 +168,25 @@ start_gen._element.firstChild.onclick = function () {
     if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         width = Number(user_width._element.firstChild.value, 10);
         height = Number(user_height._element.firstChild.value, 10);
+        if (algorithm[3].checked) {
+          if (width > 22) {
+            width = 22;
+            user_width._element.firstChild.value = 22;
+          }
+          if (height > 12) {
+            height = 12;
+            user_height._element.firstChild.value = 12;
+          }
+        } else {
+          if (width > 25) {
+            width = 25;
+            user_width._element.firstChild.value = 25;
+          }
+          if (height > 17) {
+            height = 17;
+            user_height._element.firstChild.value = 17;
+          }
+        }
         if (width < 5) {
           width = 5;
           user_width._element.firstChild.value = "5";
